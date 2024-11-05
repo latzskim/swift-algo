@@ -1,3 +1,5 @@
+// LinkedList
+// Source: https://www.kodeco.com/books/data-structures-algorithms-in-swift/v3.0/chapters/6-linked-list
 import Foundation
 
 public class Node<Value> {
