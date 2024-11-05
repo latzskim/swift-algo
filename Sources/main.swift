@@ -1,151 +1,132 @@
 import Foundation
 
-public class Node<V> {
-    public var value: V
+public class Node<Value> {
+    public var value: Value
     public var next: Node?
 
-    public init(value: V, next: Node? = nil) {
+    public init(value: Value, next: Node? = nil) {
         self.value = value
         self.next = next
     }
 }
 
-public struct LinkedList<V> {
-    var head: Node<V>?
-    var tail: Node<V>?
-    var count: Int
-
-    public init() {
-        count = 0
-    }
+public struct LinkedList<Value> {
+    private var head: Node<Value>?
+    private var tail: Node<Value>?
+    private var elemCount: Int = 0
 
     public var isEmpty: Bool {
-        head == nil
+        return head == nil
     }
 
-    public mutating func push(_ value: V) {
-        head = Node(value: value, next: head)
+    public var count: Int {
+        return elemCount
+    }
+
+    public init() {}
+
+    public mutating func push(_ value: Value) {
+        let newNode = Node(value: value, next: head)
+        head = newNode
         if tail == nil {
             tail = head
         }
-
-        count += 1
+        elemCount += 1
     }
 
-    public mutating func append(_ value: V) {
+    public mutating func append(_ value: Value) {
         guard !isEmpty else {
-            // push already has count +1
             push(value)
             return
         }
-
-        tail!.next = Node(value: value)
-        tail = tail!.next
-
-        count += 1
+        let newNode = Node(value: value)
+        tail?.next = newNode
+        tail = newNode
+        elemCount += 1
     }
 
-    public func node(at index: Int) -> Node<V>? {
-        var currNode = head
-        var currIdx = 0
-
-        while currNode != nil && currIdx < index {
-            currNode = currNode!.next
-            currIdx += 1
+    public func node(at index: Int) -> Node<Value>? {
+        guard index >= 0 else { return nil }
+        
+        var currentNode = head
+        var currentIndex = 0
+        while currentNode != nil && currentIndex < index {
+            currentNode = currentNode?.next
+            currentIndex += 1
         }
-
-        return currNode
+        return currentNode
     }
 
-    public mutating func insert(_ value: V, after node: Node<V>) {
+    public mutating func insert(_ value: Value, after node: Node<Value>) {
         guard node !== tail else {
             append(value)
             return
         }
-
         node.next = Node(value: value, next: node.next)
+        elemCount += 1
     }
 
     @discardableResult
-    public mutating func insert(_ value: V, at index: Int) -> Bool {
-        if index > count {
-            return false
-        }
-
-        guard !isEmpty && index > 0 else {
+    public mutating func insert(_ value: Value, at index: Int) -> Bool {
+        guard index >= 0 && index <= count else { return false }
+        
+        if index == 0 {
             push(value)
             return true
-        }
-
-        let nodeAt = node(at: index)
-        // Here we are trying to inser to tail.next
-        if nodeAt == nil {
+        } else if index == count {
             append(value)
             return true
         }
 
-        let insertNode = Node(value: value, next: nodeAt!)
-        let nodeAtPrev = node(at: index - 1)!
-        nodeAtPrev.next = insertNode
-        count += 1
-
-        return true
-    }
-
-    public func len() -> Int {
-        return count
-    }
-
-    public mutating func pop() -> V? {
-        if let v = head {
-            head = v.next
-            if head == nil {
-                tail = nil
-            }
-            count -= 1
-            return v.value
+        if let previousNode = node(at: index - 1) {
+            previousNode.next = Node(value: value, next: previousNode.next)
+            elemCount += 1
+            return true
         }
-        return nil
+        
+        return false
     }
 
-    public mutating func removeLast() -> V? {
-        remove(at: count - 1)
-    }
-
-    public mutating func remove(at index: Int) -> V? {
-        guard !isEmpty && index >= 0 && index < count else {
-            return nil
+    public mutating func pop() -> Value? {
+        guard let headNode = head else { return nil }
+        
+        head = headNode.next
+        if head == nil {
+            tail = nil
         }
+        elemCount -= 1
+        return headNode.value
+    }
 
+    public mutating func removeLast() -> Value? {
+        return remove(at: count - 1)
+    }
+
+    public mutating func remove(at index: Int) -> Value? {
+        guard index >= 0 && index < count else { return nil }
+        
         if index == 0 {
             return pop()
         }
 
-        var prev = head
-        var curr = head
-        var idx = 0
+        var previousNode = head
+        var currentNode = head
+        var currentIndex = 0
 
-        while let next = curr?.next {
-            if idx == index {
-                break
-            }
-
-            prev = curr
-            curr = next
-            idx += 1
+        while let nextNode = currentNode?.next, currentIndex < index {
+            previousNode = currentNode
+            currentNode = nextNode
+            currentIndex += 1
         }
 
-        prev?.next = curr?.next
-        if prev?.next == nil {
-            tail = nil
+        previousNode?.next = currentNode?.next
+        if previousNode?.next == nil {
+            tail = previousNode
         }
 
-        count -= 1
-
-        return curr?.value
-
+        elemCount -= 1
+        return currentNode?.value
     }
-
 }
 
 extension LinkedList: CustomStringConvertible {
@@ -153,7 +134,6 @@ extension LinkedList: CustomStringConvertible {
         guard let head = head else {
             return "Empty list"
         }
-
         return String(describing: head)
     }
 }
@@ -163,7 +143,6 @@ extension Node: CustomStringConvertible {
         guard let next = next else {
             return "\(value)"
         }
-
         return "\(value) -> " + String(describing: next)
     }
 }

@@ -87,16 +87,16 @@ struct LinkedListTests {
         x.push("a")
 
         #expect(String(describing: x) == "a -> b -> c -> d")
-        #expect(x.len() == 4)
+        #expect(x.count == 4)
     }
 
     @Test("edge case insert at")
     func TestInsertAtEdgeCase() {
         var x = LinkedList<Int>()
-        x.insert(1, at: x.len())
-        x.insert(2, at: x.len())
-        x.insert(3, at: x.len())
-        x.insert(4, at: x.len())
+        x.insert(1, at: x.count)
+        x.insert(2, at: x.count)
+        x.insert(3, at: x.count)
+        x.insert(4, at: x.count)
         #expect(String(describing: x) == "1 -> 2 -> 3 -> 4")
     }
 
@@ -107,14 +107,14 @@ struct LinkedListTests {
         x.append(2)
         x.append(3)
 
-        #expect(x.len() == 3)
+        #expect(x.count == 3)
 
         #expect(x.pop()! == 1)
         #expect(x.pop()! == 2)
         #expect(x.pop()! == 3)
         #expect(x.pop() == nil)
 
-        #expect(x.len() == 0)
+        #expect(x.count == 0)
     }
 
     @Test
@@ -124,14 +124,14 @@ struct LinkedListTests {
         x.append(2)
         x.append(3)
 
-        #expect(x.len() == 3)
+        #expect(x.count == 3)
 
         #expect(x.removeLast()! == 3)
         #expect(x.removeLast()! == 2)
         #expect(x.removeLast()! == 1)
         #expect(x.removeLast() == nil)
 
-        #expect(x.len() == 0)
+        #expect(x.count == 0)
     }
 
     @Test
@@ -141,7 +141,7 @@ struct LinkedListTests {
         x.append(2)
         x.append(3)
 
-        #expect(x.len() == 3)
+        #expect(x.count == 3)
 
         #expect(x.remove(at: 3) == nil)
         
@@ -150,6 +150,6 @@ struct LinkedListTests {
         #expect(x.remove(at: 0)! == 3)
         #expect(x.remove(at: 0) == nil)
 
-        #expect(x.len() == 0)
+        #expect(x.count == 0)
     }
 }
