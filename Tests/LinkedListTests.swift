@@ -1,6 +1,6 @@
 import Testing
 
-@testable import LinkedList
+@testable import SwiftAlgos
 
 struct LinkedListTests {
     @Test

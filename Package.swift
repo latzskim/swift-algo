@@ -4,20 +4,20 @@
 import PackageDescription
 
 let package = Package(
-    name: "LinkedList",
+    name: "SwiftAlgos",
     dependencies: [],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
 
         .testTarget(
-            name: "LinkedListTest",
-            dependencies: ["LinkedList"],
+            name: "SwiftAlgosTest",
+            dependencies: ["SwiftAlgos"],
             path: "Tests"
         ),
 
         .executableTarget(
-            name: "LinkedList",
+            name: "SwiftAlgos",
             dependencies: [],
             path: "Sources"),
     ]
